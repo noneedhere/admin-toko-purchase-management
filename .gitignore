@@ -4,4 +4,3 @@ node_modules/
 database/*.db
 database/*.db-shm
 database/*.db-wal
-PRD_Admin_Toko.md
