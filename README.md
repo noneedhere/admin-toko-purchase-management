@@ -134,6 +134,6 @@ Add application screenshots here if available.
 
 ## Author
 
-Muhammad Zidane Fawwaz Rosyidgit add README.mdi
+Muhammad Zidane Fawwaz Rosyidi
 
 Junior Fullstack Web Developer
