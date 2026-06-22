@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Buat transaksi pembelian baru">
+  <title>
+    <%= title %> — Admin Toko
+  </title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <%- include('../partials/navbar') %>
+
+    <div class="container">
+      <%- include('../partials/notification', { success, error }) %>
+
+        <main class="main-content">
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb">
+            <a href="/">Home</a>
+            <span class="breadcrumb-sep">/</span>
+            <a href="/purchases">Pembelian</a>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current">Buat Baru</span>
+          </nav>
+
+          <div class="page-header">
+            <h1 class="page-title">Buat Transaksi Pembelian Baru</h1>
+          </div>
+
+          <!-- Form Card -->
+          <div class="form-card">
+            <form id="purchaseForm" method="POST" action="/purchases" novalidate>
+
+              <!-- Produk -->
+              <div class="form-group">
+                <label for="product_id" class="form-label">Produk <span class="required">*</span></label>
+                <select name="product_id" id="product_id" class="form-select" required>
+                  <option value="">-- Pilih Produk --</option>
+                  <% products.forEach(product=> { %>
+                    <option value="<%= product.id %>" data-price="<%= product.price %>"
+                      data-stock="<%= product.stock_quantity %>">
+                      <%= product.product_name %> (Stok: <%= product.stock_quantity %>)
+                    </option>
+                    <% }); %>
+                </select>
+                <div class="form-error" id="error-product_id"></div>
+              </div>
+
+              <!-- Quantity -->
+              <div class="form-group">
+                <label for="quantity" class="form-label">Quantity <span class="required">*</span></label>
+                <input type="number" name="quantity" id="quantity" class="form-input" min="1" step="1"
+                  placeholder="Masukkan jumlah" required>
+                <div class="form-error" id="error-quantity"></div>
+                <div class="form-hint" id="stockHint"></div>
+              </div>
+
+              <!-- Harga Satuan (read-only) -->
+              <div class="form-group">
+                <label for="unit_price" class="form-label">Harga Satuan</label>
+                <input type="text" id="unit_price" class="form-input form-input-readonly" readonly
+                  placeholder="Otomatis terisi saat produk dipilih">
+              </div>
+
+              <!-- Total Harga (read-only) -->
+              <div class="form-group">
+                <label for="total_price" class="form-label">Total Harga</label>
+                <input type="text" id="total_price" class="form-input form-input-readonly" readonly
+                  placeholder="Otomatis dihitung">
+              </div>
+
+              <!-- Buttons -->
+              <div class="form-actions">
+                <a href="/purchases" class="btn btn-secondary">Kembali</a>
+                <button type="submit" class="btn btn-primary" id="btnSubmit">Buat Transaksi</button>
+              </div>
+            </form>
+          </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2026 Admin Toko — Purchase &amp; Stock Management System</p>
+      </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

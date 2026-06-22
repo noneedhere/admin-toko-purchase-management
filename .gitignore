@@ -1,0 +1,5 @@
+node_modules/
+.env
+*.db
+database/*.db
+PRD_Admin_Toko.md

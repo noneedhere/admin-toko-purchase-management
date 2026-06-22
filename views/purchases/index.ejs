@@ -1,0 +1,161 @@
+<% function formatRupiah(amount) { return 'Rp ' + Number(amount).toLocaleString('id-ID'); } function formatDate(dateStr)
+  { const d=new Date(dateStr); const day=String(d.getDate()).padStart(2, '0' ); const month=String(d.getMonth() +
+  1).padStart(2, '0' ); const year=d.getFullYear(); const hours=String(d.getHours()).padStart(2, '0' ); const
+  minutes=String(d.getMinutes()).padStart(2, '0' ); return `${day}/${month}/${year} ${hours}:${minutes}`; } %>
+  <!DOCTYPE html>
+  <html lang="id">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Daftar semua transaksi pembelian">
+    <title>
+      <%= title %> — Admin Toko
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+
+      <div class="container">
+        <%- include('../partials/notification', { success, error }) %>
+
+          <main class="main-content">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+              <a href="/">Home</a>
+              <span class="breadcrumb-sep">/</span>
+              <span class="breadcrumb-current">Pembelian</span>
+            </nav>
+
+            <div class="page-header">
+              <h1 class="page-title">Daftar Transaksi Pembelian</h1>
+              <a href="/purchases/create" class="btn btn-primary" id="btnCreatePurchase">
+                + Buat Pembelian Baru
+              </a>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+              <div class="summary-card">
+                <div class="summary-card-value">
+                  <%= stats.total %>
+                </div>
+                <div class="summary-card-label">Total Transaksi</div>
+              </div>
+              <div class="summary-card summary-card-success">
+                <div class="summary-card-value">
+                  <%= stats.active %>
+                </div>
+                <div class="summary-card-label">Transaksi Aktif</div>
+              </div>
+              <div class="summary-card summary-card-danger">
+                <div class="summary-card-value">
+                  <%= stats.cancelled %>
+                </div>
+                <div class="summary-card-label">Transaksi Dibatalkan</div>
+              </div>
+            </div>
+
+            <!-- Tabel Transaksi -->
+            <div class="table-wrapper">
+              <table class="table" id="purchaseTable">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Invoice</th>
+                    <th>Nama Produk</th>
+                    <th>Qty</th>
+                    <th>Harga Satuan</th>
+                    <th>Total Harga</th>
+                    <th>Tanggal</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (purchases.length===0) { %>
+                    <tr>
+                      <td colspan="9" class="text-center text-muted">Belum ada transaksi pembelian.</td>
+                    </tr>
+                    <% } else { %>
+                      <% purchases.forEach((purchase, index)=> { %>
+                        <tr>
+                          <td>
+                            <%= index + 1 %>
+                          </td>
+                          <td class="font-mono">
+                            <%= purchase.invoice_number %>
+                          </td>
+                          <td class="font-medium">
+                            <%= purchase.product_name %>
+                          </td>
+                          <td>
+                            <%= purchase.quantity %>
+                          </td>
+                          <td class="text-nowrap">
+                            <%= formatRupiah(purchase.unit_price) %>
+                          </td>
+                          <td class="text-nowrap font-medium">
+                            <%= formatRupiah(purchase.total_price) %>
+                          </td>
+                          <td class="text-nowrap">
+                            <%= formatDate(purchase.purchase_date) %>
+                          </td>
+                          <td>
+                            <% if (purchase.status==='active' ) { %>
+                              <span class="badge badge-success">Active</span>
+                              <% } else { %>
+                                <span class="badge badge-cancelled">Cancelled</span>
+                                <% } %>
+                          </td>
+                          <td>
+                            <% if (purchase.status==='active' ) { %>
+                              <button class="btn btn-danger btn-sm btn-cancel-purchase" data-id="<%= purchase.id %>"
+                                data-invoice="<%= purchase.invoice_number %>" id="btnCancel-<%= purchase.id %>">
+                                Batalkan
+                              </button>
+                              <% } else { %>
+                                <span class="text-muted">—</span>
+                                <% } %>
+                          </td>
+                        </tr>
+                        <% }); %>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
+          </main>
+      </div>
+
+      <!-- Modal Konfirmasi Pembatalan -->
+      <div class="modal-overlay" id="cancelModal">
+        <div class="modal">
+          <div class="modal-header">
+            <h2 class="modal-title">Konfirmasi Pembatalan</h2>
+            <button class="modal-close" onclick="closeCancelModal()" aria-label="Tutup">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p>Apakah Anda yakin ingin membatalkan transaksi <strong id="modalInvoice"></strong>?</p>
+            <p class="text-muted">Stok produk akan dikembalikan.</p>
+          </div>
+          <div class="modal-footer">
+            <form id="cancelForm" method="POST" action="">
+              <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Tidak</button>
+              <button type="submit" class="btn btn-danger" id="btnConfirmCancel">Ya, Batalkan</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; 2026 Admin Toko — Purchase &amp; Stock Management System</p>
+        </div>
+      </footer>
+
+      <script src="/js/main.js"></script>
+  </body>
+
+  </html>

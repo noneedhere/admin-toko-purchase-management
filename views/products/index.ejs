@@ -1,0 +1,119 @@
+<% function formatRupiah(amount) { return 'Rp ' + Number(amount).toLocaleString('id-ID'); } function truncate(str, len)
+  { if (!str) return '-' ; return str.length> len
+  ? str.substring(0, len) + '...'
+  : str;
+  }
+  %>
+  <!DOCTYPE html>
+  <html lang="id">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Daftar produk dengan informasi stok real-time">
+    <title>
+      <%= title %> — Admin Toko
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+
+      <div class="container">
+        <%- include('../partials/notification', { success, error }) %>
+
+          <main class="main-content">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+              <a href="/">Home</a>
+              <span class="breadcrumb-sep">/</span>
+              <span class="breadcrumb-current">Produk</span>
+            </nav>
+
+            <div class="page-header">
+              <h1 class="page-title">Daftar Produk</h1>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+              <div class="summary-card">
+                <div class="summary-card-value">
+                  <%= totalProducts %>
+                </div>
+                <div class="summary-card-label">Total Produk</div>
+              </div>
+              <div class="summary-card summary-card-danger">
+                <div class="summary-card-value">
+                  <%= outOfStock %>
+                </div>
+                <div class="summary-card-label">Stok Habis</div>
+              </div>
+            </div>
+
+            <!-- Tabel Produk -->
+            <div class="table-wrapper">
+              <table class="table" id="productTable">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama Produk</th>
+                    <th>Harga</th>
+                    <th>Deskripsi</th>
+                    <th>Stok Tersedia</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (products.length===0) { %>
+                    <tr>
+                      <td colspan="6" class="text-center text-muted">Belum ada data produk.</td>
+                    </tr>
+                    <% } else { %>
+                      <% products.forEach((product, index)=> { %>
+                        <tr>
+                          <td>
+                            <%= index + 1 %>
+                          </td>
+                          <td class="font-medium">
+                            <%= product.product_name %>
+                          </td>
+                          <td class="text-nowrap">
+                            <%= formatRupiah(product.price) %>
+                          </td>
+                          <td class="text-muted">
+                            <%= truncate(product.description, 60) %>
+                          </td>
+                          <td>
+                            <%= product.stock_quantity %>
+                          </td>
+                          <td>
+                            <% if (product.stock_quantity> 0) { %>
+                              <span class="badge badge-success">Tersedia</span>
+                              <% } else { %>
+                                <span class="badge badge-danger">Stok Habis</span>
+                                <% } %>
+                          </td>
+                        </tr>
+                        <% }); %>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer">
+              <p class="text-muted">Total: <%= totalProducts %> produk</p>
+            </div>
+          </main>
+      </div>
+
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; 2026 Admin Toko — Purchase &amp; Stock Management System</p>
+        </div>
+      </footer>
+
+      <script src="/js/main.js"></script>
+  </body>
+
+  </html>

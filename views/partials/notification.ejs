@@ -1,0 +1,23 @@
+<% if (typeof success !=='undefined' && success) { %>
+  <div class="notification notification-success" id="notification">
+    <div class="notification-content">
+      <span class="notification-icon">✓</span>
+      <span class="notification-text">
+        <%= success %>
+      </span>
+    </div>
+    <button class="notification-close" onclick="closeNotification()" aria-label="Tutup notifikasi">&times;</button>
+  </div>
+  <% } %>
+
+    <% if (typeof error !=='undefined' && error) { %>
+      <div class="notification notification-error" id="notification">
+        <div class="notification-content">
+          <span class="notification-icon">✗</span>
+          <span class="notification-text">
+            <%= error %>
+          </span>
+        </div>
+        <button class="notification-close" onclick="closeNotification()" aria-label="Tutup notifikasi">&times;</button>
+      </div>
+      <% } %>
